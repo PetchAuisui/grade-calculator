@@ -1,8 +1,9 @@
 import Icon from '../icons'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
+import StatusBadge from '../components/StatusBadge'
 import {
-  describeNeed, fmt, gradeOf, newCourse, requiredAvg, termStats, toNum, totals,
+  describeNeed, fmt, gradeOf, isDraft, newCourse, requiredAvg, termStats, toNum, totals,
 } from '../lib/grade'
 
 // หน้าเดียวของ 1 เทอม: รายวิชา, GPA เทอมนี้, คำนวณย้อนกลับเฉพาะเทอมนี้
@@ -14,7 +15,8 @@ export default function TermPage() {
   if (!term) return <Navigate to="/terms" replace />
 
   const stats = termStats(term, scale)
-  const all = totals(terms, scale)
+  // GPAX เป้าหมายนับเฉพาะเทอมที่เกรดออกแล้ว + เทอมนี้
+  const all = totals(terms.filter((t) => t.id === id || !isDraft(t)), scale)
   const setCourses = (courses) => updateTerm(id, { courses })
   const patchCourse = (cid, patch) =>
     setCourses(term.courses.map((c) => (c.id === cid ? { ...c, ...patch } : c)))
@@ -36,6 +38,18 @@ export default function TermPage() {
           <input className="tname" value={term.name} placeholder="ชื่อเทอม" onChange={(e) => updateTerm(id, { name: e.target.value })} />
           <button className="ghost" title="ลบเทอม" aria-label="ลบเทอม" onClick={() => { if (confirm(`ลบ "${term.name}" ?`)) { deleteTerm(id); nav('/terms') } }}><Icon name="trash" size="1.2em" /></button>
         </div>
+        <div className="status-row">
+          <span className="muted">สถานะเทอม</span>
+          <div className="seg">
+            <button type="button" className={!isDraft(term) ? 'on' : ''} onClick={() => updateTerm(id, { status: 'final' })}>
+              <Icon name="check" size="1em" /> เกรดออกแล้ว
+            </button>
+            <button type="button" className={isDraft(term) ? 'on' : ''} onClick={() => updateTerm(id, { status: 'draft' })}>
+              <Icon name="flask" size="1em" /> ทดลอง
+            </button>
+          </div>
+        </div>
+        {isDraft(term) && <p className="hint">เทอมทดลองไม่ถูกนับรวมใน GPAX (เปิดดูรวมได้ที่หน้า GPAX)</p>}
         <div className="summary two">
           <div className="stat"><b>{fmt(stats.gpa)}</b><span>GPA เทอมนี้</span></div>
           <div className="stat"><b>{stats.cr + stats.pendCr}</b><span>หน่วยกิตเทอมนี้</span></div>

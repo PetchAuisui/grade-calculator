@@ -14,7 +14,9 @@ export const fmt = (n, d = 2) => (n == null || Number.isNaN(n) ? '–' : n.toFix
 export const toNum = (v) => (v === '' || v == null || Number.isNaN(parseFloat(v)) ? null : parseFloat(v))
 
 export const newCourse = () => ({ id: uid(), name: '', credit: 3, score: null, grade: 'auto' })
-export const newTerm = (name) => ({ id: uid(), name, target: null, targetX: null, courses: [newCourse()] })
+// status: 'final' = เกรดจริงออกแล้ว, 'draft' = ทดลอง/คาดการณ์ (เทอมที่บันทึกก่อนหน้านี้ไม่มี status ให้นับเป็น final)
+export const newTerm = (name) => ({ id: uid(), name, status: 'final', target: null, targetX: null, courses: [newCourse()] })
+export const isDraft = (t) => t.status === 'draft'
 
 export function gradeOf(course, scale) {
   if (course.grade && course.grade !== 'auto') return scale.find((s) => s.g === course.grade) || null

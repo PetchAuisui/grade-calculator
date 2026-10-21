@@ -1,6 +1,7 @@
 import Icon from '../icons'
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
+import StatusBadge from '../components/StatusBadge'
 import { fmt, termStats } from '../lib/grade'
 
 // หน้ารวมเทอม: เลือกเทอมเพื่อเข้าไปแก้รายวิชา
@@ -20,7 +21,7 @@ export default function TermsPage() {
           const s = termStats(t, scale)
           return (
             <Link key={t.id} to={`/terms/${t.id}`} className="card term-card">
-              <b>{t.name || '(ไม่มีชื่อ)'}</b>
+              <div className="card-top"><b>{t.name || '(ไม่มีชื่อ)'}</b><StatusBadge term={t} /></div>
               <div className="big">{fmt(s.gpa)}</div>
               <span className="muted">GPA เทอม · {t.courses.length} วิชา · {s.cr + s.pendCr} หน่วยกิต</span>
               {s.pendCr > 0 && <span className="tag">มี {s.pendCr} หน่วยกิตยังไม่ออกเกรด</span>}
