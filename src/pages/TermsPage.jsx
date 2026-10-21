@@ -23,7 +23,7 @@ export default function TermsPage() {
             <Link key={t.id} to={`/terms/${t.id}`} className="card term-card">
               <div className="card-top"><b>{t.name || '(ไม่มีชื่อ)'}</b><StatusBadge term={t} /></div>
               <div className="big">{fmt(s.gpa)}</div>
-              <span className="muted">GPA เทอม · {t.courses.length} วิชา · {s.cr + s.pendCr} หน่วยกิต</span>
+              <span className="muted">GPA เทอม · {t.courses.length} วิชา · {s.allCr} หน่วยกิต</span>
               {s.pendCr > 0 && <span className="tag">มี {s.pendCr} หน่วยกิตยังไม่ออกเกรด</span>}
             </Link>
           )

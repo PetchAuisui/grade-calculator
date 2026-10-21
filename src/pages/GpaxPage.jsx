@@ -15,7 +15,7 @@ export default function GpaxPage() {
   const counted = withDraft ? terms : terms.filter((t) => !isDraft(t))
   const tot = totals(counted, scale)
   const rows = cumulative(counted, scale)
-  const maxPt = Math.max(4, ...scale.map((s) => s.pt))
+  const maxPt = Math.max(4, ...scale.filter((s) => !s.nogpa).map((s) => s.pt))
 
   const t = toNum(target), f = toNum(futureCr)
   const plan = t != null && f != null && f > 0 ? describeNeed(requiredAvg(t, tot.cr, tot.pts, f), scale) : null
@@ -28,6 +28,7 @@ export default function GpaxPage() {
           <div className="stat"><b>{tot.cr}</b><span>หน่วยกิตที่มีเกรด</span></div>
           <div className="stat"><b>{counted.length}</b><span>เทอมที่นับ</span></div>
         </div>
+        {tot.passCr > 0 && <p className="hint" style={{ marginTop: 10 }}>หน่วยกิตที่ได้ S (ผ่าน): {tot.passCr} ไม่คิดเข้า GPAX</p>}
         {drafts > 0 && (
           <label className="check">
             <input type="checkbox" checked={withDraft} onChange={(e) => setWithDraft(e.target.checked)} />
