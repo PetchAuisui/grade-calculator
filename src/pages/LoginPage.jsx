@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
+  const [name, setName] = useState('')
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState(null)
 
@@ -34,7 +35,7 @@ export default function LoginPage() {
     e.preventDefault()
     if (mode === 'up' && password !== confirm) return setMsg({ ok: false, text: 'รหัสผ่านทั้งสองช่องไม่ตรงกัน' })
     setBusy(true); setMsg(null)
-    const { data, error } = mode === 'in' ? await signIn(email, password) : await signUp(email, password)
+    const { data, error } = mode === 'in' ? await signIn(email, password) : await signUp(email, password, name.trim())
     setBusy(false)
     if (error) return setMsg({ ok: false, text: error.message })
     if (mode === 'up' && !data.session) return setMsg({ ok: true, text: 'สมัครแล้ว กรุณาเช็กอีเมลเพื่อยืนยัน แล้วกลับมาเข้าสู่ระบบ' })
@@ -55,6 +56,11 @@ export default function LoginPage() {
     <form className="card auth" onSubmit={submit}>
       <h2>{mode === 'in' ? 'เข้าสู่ระบบ' : 'สมัครสมาชิก'}</h2>
       <p className="hint">ล็อกอินแล้วข้อมูลเกรดจะซิงก์ไปทุกอุปกรณ์</p>
+      {mode === 'up' && (
+        <label>ชื่อ-นามสกุล
+          <input required autoComplete="name" placeholder="เช่น สมชาย ใจดี" value={name} onChange={(e) => setName(e.target.value)} />
+        </label>
+      )}
       <label>อีเมล
         <input type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
       </label>

@@ -1,12 +1,23 @@
 import Icon from '../icons'
 import { useRef } from 'react'
+import { useState } from 'react'
 import { useStore } from '../store'
+import { cloudEnabled } from '../lib/supabase'
+import { displayName, useAuth } from '../auth'
 import { DEFAULT_SCALE, toNum } from '../lib/grade'
 
 export default function SettingsPage() {
   const store = useStore()
   const { scale, setScale } = store
   const file = useRef(null)
+  const { user, updateName } = useAuth()
+  const [name, setName] = useState(user?.user_metadata?.display_name ?? '')
+  const [saved, setSaved] = useState('')
+  const saveName = async (e) => {
+    e.preventDefault()
+    const { error } = await updateName(name.trim())
+    setSaved(error ? 'บันทึกไม่สำเร็จ: ' + error.message : 'บันทึกแล้ว')
+  }
   const patch = (i, p) => setScale(scale.map((s, j) => (j === i ? { ...s, ...p } : s)))
 
   const exportJson = () => {
@@ -27,6 +38,21 @@ export default function SettingsPage() {
 
   return (
     <>
+      {cloudEnabled && user && (
+        <form className="card" onSubmit={saveName}>
+          <h3>บัญชี</h3>
+          <p className="hint">อีเมล: {user.email} · แสดงเป็น "{displayName(user)}"</p>
+          <div className="goal-inputs">
+            <label>ชื่อ-นามสกุล (ชื่อที่แสดง)
+              <input value={name} onChange={(e) => { setName(e.target.value); setSaved('') }} placeholder="เช่น สมชาย ใจดี" />
+            </label>
+          </div>
+          <div className="actions">
+            <button className="primary" disabled={!name.trim()}>บันทึกชื่อ</button>
+            {saved && <span className="muted" style={{ alignSelf: 'center', margin: 0 }}>{saved}</span>}
+          </div>
+        </form>
+      )}
       <div className="card">
         <h3>ตารางเกณฑ์เกรด</h3>
         <p className="hint">เกรดคำนวณจากคะแนนขั้นต่ำสูงสุดที่คะแนนถึง ค่าเริ่มต้นเป็นเกณฑ์ 4.0</p>
