@@ -1,3 +1,4 @@
+import Icon from '../icons'
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { fmt, termStats } from '../lib/grade'
@@ -11,9 +12,9 @@ export default function TermsPage() {
     <>
       <div className="page-head">
         <h2>เทอมทั้งหมด</h2>
-        <button className="primary" onClick={() => nav(`/terms/${addTerm()}`)}>+ เพิ่มเทอม</button>
+        <button className="primary" onClick={() => nav(`/terms/${addTerm()}`)}><Icon name="plus" /> เพิ่มเทอม</button>
       </div>
-      {terms.length === 0 && <div className="card empty">ยังไม่มีเทอม กด "+ เพิ่มเทอม" เพื่อเริ่มต้น</div>}
+      {terms.length === 0 && <div className="card empty">ยังไม่มีเทอม กด "<Icon name="plus" /> เพิ่มเทอม" เพื่อเริ่มต้น</div>}
       <div className="grid">
         {terms.map((t) => {
           const s = termStats(t, scale)
