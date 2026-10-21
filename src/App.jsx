@@ -5,7 +5,7 @@ import TermPage from './pages/TermPage'
 import GpaxPage from './pages/GpaxPage'
 import SettingsPage from './pages/SettingsPage'
 import LoginPage from './pages/LoginPage'
-import { useAuth } from './auth'
+import { displayName, useAuth } from './auth'
 import { useStore } from './store'
 import { cloudEnabled } from './lib/supabase'
 
@@ -24,7 +24,11 @@ function Account() {
   return (
     <div className="account">
       <span className={`sync ${sync}`} title={user.email}><Icon name={SYNC[sync]?.[0] ?? 'cloud'} /> {SYNC[sync]?.[1]}</span>
-      <button className="ghost" onClick={logout} title={user.email}>ออกจากระบบ</button>
+      <div className="who" title={user.email}>
+        <span className="avatar">{displayName(user).charAt(0).toUpperCase()}</span>
+        <span className="who-text"><b>{displayName(user)}</b><small>{user.email}</small></span>
+      </div>
+      <button className="ghost" onClick={logout}>ออกจากระบบ</button>
     </div>
   )
 }

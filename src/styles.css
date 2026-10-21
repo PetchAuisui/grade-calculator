@@ -131,3 +131,9 @@ h3{display:flex}
 .menu button{border:none;justify-content:flex-start;width:100%;background:transparent;padding:8px 10px;font-size:.9rem}
 .menu button:hover{background:var(--accent-soft)}
 .menu button.danger{color:var(--no)}
+
+.who{display:flex;align-items:center;gap:8px}
+.avatar{width:2rem;height:2rem;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700}
+.who-text{display:grid;line-height:1.2}
+.who-text small{color:var(--muted);font-size:.72rem;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:600px){.who-text small{display:none}}
