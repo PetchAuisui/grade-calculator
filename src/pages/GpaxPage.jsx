@@ -2,15 +2,19 @@ import Icon from '../icons'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../store'
-import { cumulative, describeNeed, fmt, requiredAvg, toNum, totals } from '../lib/grade'
+import { cumulative, describeNeed, fmt, isDraft, requiredAvg, toNum, totals } from '../lib/grade'
+import StatusBadge from '../components/StatusBadge'
 
 // หน้า GPAX รวมทุกเทอม แยกจากหน้าเทอมโดยสิ้นเชิง
 export default function GpaxPage() {
   const { terms, scale } = useStore()
   const [target, setTarget] = useState('')
   const [futureCr, setFutureCr] = useState('')
-  const tot = totals(terms, scale)
-  const rows = cumulative(terms, scale)
+  const [withDraft, setWithDraft] = useState(false)
+  const drafts = terms.filter(isDraft).length
+  const counted = withDraft ? terms : terms.filter((t) => !isDraft(t))
+  const tot = totals(counted, scale)
+  const rows = cumulative(counted, scale)
   const maxPt = Math.max(4, ...scale.map((s) => s.pt))
 
   const t = toNum(target), f = toNum(futureCr)
@@ -22,8 +26,14 @@ export default function GpaxPage() {
         <div className="summary">
           <div className="stat"><b>{fmt(tot.gpax)}</b><span>GPAX</span></div>
           <div className="stat"><b>{tot.cr}</b><span>หน่วยกิตที่มีเกรด</span></div>
-          <div className="stat"><b>{terms.length}</b><span>เทอม</span></div>
+          <div className="stat"><b>{counted.length}</b><span>เทอมที่นับ</span></div>
         </div>
+        {drafts > 0 && (
+          <label className="check">
+            <input type="checkbox" checked={withDraft} onChange={(e) => setWithDraft(e.target.checked)} />
+            รวมเทอมทดลอง ({drafts} เทอม) ในการคำนวณ
+          </label>
+        )}
       </div>
 
       <div className="cols">
@@ -35,7 +45,7 @@ export default function GpaxPage() {
           <tbody>
             {rows.map((r) => (
               <tr key={r.term.id}>
-                <td><Link to={`/terms/${r.term.id}`}>{r.term.name || '(ไม่มีชื่อ)'}</Link></td>
+                <td><Link to={`/terms/${r.term.id}`}>{r.term.name || '(ไม่มีชื่อ)'}</Link> {isDraft(r.term) && <StatusBadge term={r.term} />}</td>
                 <td className="r">{r.cr}</td>
                 <td className="r">{fmt(r.gpa)}</td>
                 <td className="r"><b>{fmt(r.gpax)}</b></td>
