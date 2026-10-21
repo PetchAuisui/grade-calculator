@@ -12,10 +12,14 @@ export const DEFAULT_SCALE = [
   { g: 'U', min: 0, pt: 0, nogpa: true, pass: false },
 ]
 
-// ข้อมูลเก่าที่บันทึกไว้ก่อนมี S/U: เติม S/U เข้าไปในตารางเกณฑ์
+// ข้อมูลเก่า: เติม S/U ถ้ายังไม่มี และถ้าผู้ใช้เคยสร้างเกรดชื่อ S/U เองในตารางเกณฑ์ (คิดแต้มเป็นเกรดปกติ)
+// ให้แปลงเป็น S/U แบบไม่คิดเกรด เพราะชื่อนี้สงวนไว้แล้ว
 export function withSpecial(scale) {
-  const extra = DEFAULT_SCALE.filter((d) => d.nogpa && !scale.some((s) => s.g === d.g))
-  return extra.length ? [...scale, ...extra.map((e) => ({ ...e }))] : scale
+  const specials = DEFAULT_SCALE.filter((d) => d.nogpa)
+  const names = specials.map((d) => d.g)
+  const fixed = scale.map((s) => (names.includes(s.g) && !s.nogpa ? { ...specials.find((d) => d.g === s.g) } : s))
+  const missing = specials.filter((d) => !fixed.some((s) => s.g === d.g)).map((d) => ({ ...d }))
+  return missing.length || fixed.some((s, i) => s !== scale[i]) ? [...fixed, ...missing] : scale
 }
 export const gpaScale = (scale) => scale.filter((s) => !s.nogpa)
 
