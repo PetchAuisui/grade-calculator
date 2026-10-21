@@ -71,3 +71,10 @@ button:disabled{opacity:.4;cursor:default}
   .goal-inputs{grid-template-columns:1fr}
   .hide-sm{display:none}
 }
+.account{display:flex;align-items:center;gap:6px;margin-left:auto}
+.account .muted{margin:0}
+.login-btn{margin-left:auto;padding:6px 14px;border-radius:9px;border:1px solid var(--accent);font-weight:500}
+.auth{max-width:380px;margin:20px auto;display:grid;gap:10px}
+.auth label{font-size:.85rem;color:var(--muted);display:grid;gap:2px}
+.rev-msg{padding:8px 10px;border-radius:8px;background:var(--bg);font-size:.88rem;border-left:4px solid var(--no)}
+.rev-msg.ok{border-color:var(--ok)}
