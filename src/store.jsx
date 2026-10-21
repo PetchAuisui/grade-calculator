@@ -1,11 +1,12 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
-import { DEFAULT_SCALE, newTerm } from './lib/grade'
+import { DEFAULT_SCALE, newTerm, withSpecial } from './lib/grade'
 import { supabase } from './lib/supabase'
 import { useAuth } from './auth'
 
 const KEY = 'gradecalc.v1'
 const initial = () => ({ scale: structuredClone(DEFAULT_SCALE), terms: [newTerm('ปี 1 เทอม 1')] })
 const valid = (s) => s && Array.isArray(s.terms) && Array.isArray(s.scale)
+const normalize = (s) => ({ ...s, scale: withSpecial(s.scale) })
 // state ที่ยังไม่เคยถูกแก้ (มีแค่เทอมเริ่มต้นที่ว่างเปล่า)
 const isBlank = (s) =>
   s.terms.length === 0 ||
@@ -14,7 +15,7 @@ const isBlank = (s) =>
 function load() {
   try {
     const s = JSON.parse(localStorage.getItem(KEY))
-    if (valid(s)) return s
+    if (valid(s)) return normalize(s)
   } catch {}
   return initial()
 }
@@ -47,12 +48,13 @@ export function StoreProvider({ children }) {
       if (error) { setSync('error'); return }
       const local = stateRef.current
       if (valid(data?.data)) {
-        const same = JSON.stringify(data.data) === JSON.stringify(local)
+        const remote = normalize(data.data)
+        const same = JSON.stringify(remote) === JSON.stringify(local)
         if (!same && !isBlank(local) &&
             !confirm('พบข้อมูลทั้งในเครื่องนี้และบนคลาวด์\n\nOK = ใช้ข้อมูลบนคลาวด์ (ข้อมูลในเครื่องนี้จะถูกแทนที่)\nCancel = ใช้ข้อมูลในเครื่องนี้ (ข้อมูลบนคลาวด์จะถูกเขียนทับ)')) {
           // เก็บของเครื่องนี้ แล้วให้ effect เซฟขึ้นคลาวด์ด้านล่าง
         } else if (!same) {
-          setState(data.data)
+          setState(remote)
         }
       }
       ready.current = true
@@ -78,7 +80,7 @@ export function StoreProvider({ children }) {
   const api = {
     ...state,
     sync,
-    setAll: (s) => setState(s),
+    setAll: (s) => setState(normalize(s)),
     reset: () => setState(initial()),
     // ออกจากระบบแล้วล้างข้อมูลในเครื่อง กันคนอื่นที่ใช้เครื่องเดียวกันเห็น
     logout: async () => {

@@ -33,18 +33,24 @@ export default function SettingsPage() {
         <table>
           <thead><tr><th>เกรด</th><th>คะแนนขั้นต่ำ</th><th>แต้ม</th><th /></tr></thead>
           <tbody>
-            {scale.map((s, i) => (
+            {scale.map((s, i) => s.nogpa ? (
+              <tr key={i}>
+                <td><input value={s.g} disabled /></td>
+                <td colSpan={2} className="muted">{s.pass ? 'ผ่าน' : 'ไม่ผ่าน'} · เลือกเองเท่านั้น ไม่คิดเข้า GPA/GPAX</td>
+                <td />
+              </tr>
+            ) : (
               <tr key={i}>
                 <td><input value={s.g} onChange={(e) => patch(i, { g: e.target.value })} /></td>
                 <td><input type="number" step="0.01" value={s.min} onChange={(e) => patch(i, { min: toNum(e.target.value) ?? 0 })} /></td>
                 <td><input type="number" step="0.1" value={s.pt} onChange={(e) => patch(i, { pt: toNum(e.target.value) ?? 0 })} /></td>
-                <td className="w36"><button className="ghost" disabled={scale.length <= 1} onClick={() => setScale(scale.filter((_, j) => j !== i))}><Icon name="x" /></button></td>
+                <td className="w36"><button className="ghost" disabled={scale.filter((x) => !x.nogpa).length <= 1} onClick={() => setScale(scale.filter((_, j) => j !== i))}><Icon name="x" /></button></td>
               </tr>
             ))}
           </tbody>
         </table>
         <div className="actions">
-          <button onClick={() => setScale([...scale, { g: '?', min: 0, pt: 0 }])}><Icon name="plus" /> เพิ่มเกรด</button>
+          <button onClick={() => setScale([...scale.filter((x) => !x.nogpa), { g: '?', min: 0, pt: 0 }, ...scale.filter((x) => x.nogpa)])}><Icon name="plus" /> เพิ่มเกรด</button>
           <button onClick={() => setScale(structuredClone(DEFAULT_SCALE))}>คืนค่าเริ่มต้น</button>
         </div>
       </div>

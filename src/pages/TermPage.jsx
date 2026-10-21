@@ -52,7 +52,7 @@ export default function TermPage() {
         {isDraft(term) && <p className="hint">เทอมทดลองไม่ถูกนับรวมใน GPAX (เปิดดูรวมได้ที่หน้า GPAX)</p>}
         <div className="summary two">
           <div className="stat"><b>{fmt(stats.gpa)}</b><span>GPA เทอมนี้</span></div>
-          <div className="stat"><b>{stats.cr + stats.pendCr}</b><span>หน่วยกิตเทอมนี้</span></div>
+          <div className="stat"><b>{stats.allCr}</b><span>หน่วยกิตเทอมนี้</span></div>
         </div>
 
         <table>
@@ -73,7 +73,7 @@ export default function TermPage() {
                       {scale.map((s) => <option key={s.g} value={s.g}>{s.g}</option>)}
                     </select>
                   </td>
-                  <td className="gcell w64">{g ? <>{g.g}<small>{fmt(g.pt, 1)}</small></> : '–'}</td>
+                  <td className="gcell w64">{g ? <>{g.g}<small>{g.nogpa ? (g.pass ? 'ผ่าน' : 'ไม่ผ่าน') : fmt(g.pt, 1)}</small></> : '–'}</td>
                   <td className="w36"><button className="ghost" title="ลบวิชา" onClick={() => setCourses(term.courses.filter((x) => x.id !== c.id))}><Icon name="x" /></button></td>
                 </tr>
               )
