@@ -1,3 +1,4 @@
+import Icon from '../icons'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import {
@@ -21,18 +22,19 @@ export default function TermPage() {
   const goals = []
   if (stats.pendCr > 0) {
     if (term.target != null)
-      goals.push({ label: `🎯 GPA เทอมนี้ ${fmt(term.target)}`, ...describeNeed(requiredAvg(term.target, stats.cr, stats.pts, stats.pendCr), scale) })
+      goals.push({ icon: 'target', label: `GPA เทอมนี้ ${fmt(term.target)}`, ...describeNeed(requiredAvg(term.target, stats.cr, stats.pts, stats.pendCr), scale) })
     if (term.targetX != null)
-      goals.push({ label: `🏆 GPAX รวม ${fmt(term.targetX)}`, ...describeNeed(requiredAvg(term.targetX, all.cr, all.pts, stats.pendCr), scale) })
+      goals.push({ icon: 'trophy', label: `GPAX รวม ${fmt(term.targetX)}`, ...describeNeed(requiredAvg(term.targetX, all.cr, all.pts, stats.pendCr), scale) })
   }
 
   return (
     <>
-      <Link to="/terms" className="back">← กลับไปหน้าเทอม</Link>
+      <Link to="/terms" className="back"><Icon name="back" /> กลับไปหน้าเทอม</Link>
+      <div className="cols">
       <div className="card">
         <div className="term-head">
           <input className="tname" value={term.name} placeholder="ชื่อเทอม" onChange={(e) => updateTerm(id, { name: e.target.value })} />
-          <button className="ghost" title="ลบเทอม" onClick={() => { if (confirm(`ลบ "${term.name}" ?`)) { deleteTerm(id); nav('/terms') } }}>🗑</button>
+          <button className="ghost" title="ลบเทอม" aria-label="ลบเทอม" onClick={() => { if (confirm(`ลบ "${term.name}" ?`)) { deleteTerm(id); nav('/terms') } }}><Icon name="trash" size="1.2em" /></button>
         </div>
         <div className="summary two">
           <div className="stat"><b>{fmt(stats.gpa)}</b><span>GPA เทอมนี้</span></div>
@@ -58,17 +60,17 @@ export default function TermPage() {
                     </select>
                   </td>
                   <td className="gcell w64">{g ? <>{g.g}<small>{fmt(g.pt, 1)}</small></> : '–'}</td>
-                  <td className="w36"><button className="ghost" title="ลบวิชา" onClick={() => setCourses(term.courses.filter((x) => x.id !== c.id))}>✕</button></td>
+                  <td className="w36"><button className="ghost" title="ลบวิชา" onClick={() => setCourses(term.courses.filter((x) => x.id !== c.id))}><Icon name="x" /></button></td>
                 </tr>
               )
             })}
           </tbody>
         </table>
-        <div className="actions"><button onClick={() => setCourses([...term.courses, newCourse()])}>+ เพิ่มวิชา</button></div>
+        <div className="actions"><button onClick={() => setCourses([...term.courses, newCourse()])}><Icon name="plus" /> เพิ่มวิชา</button></div>
       </div>
 
-      <div className="card">
-        <h3>🔁 คำนวณย้อนกลับ: ต้องได้เกรดเท่าไรถึงจะได้ตามเป้า</h3>
+      <div className="card side">
+        <h3><Icon name="repeat" /> คำนวณย้อนกลับ: ต้องได้เกรดเท่าไรถึงจะได้ตามเป้า</h3>
         <p className="hint">เว้นคะแนน/เกรดว่างไว้สำหรับวิชาที่ยังไม่ออกผล แล้วเว็บจะคำนวณว่าวิชาเหล่านั้นต้องได้เท่าไร</p>
         <div className="goal-inputs">
           <label>เป้า GPA เทอมนี้
@@ -81,8 +83,9 @@ export default function TermPage() {
         <div className="rev">
           {stats.pendCr <= 0 && <div className="info">ไม่มีวิชาที่ยังไม่มีเกรดในเทอมนี้</div>}
           {stats.pendCr > 0 && !goals.length && <div className="info">ใส่เป้าหมายด้านบนเพื่อดูผล</div>}
-          {goals.map((g) => <div key={g.label} className={g.level}><b>{g.label}:</b> {g.text}</div>)}
+          {goals.map((g) => <div key={g.label} className={g.level}><b><Icon name={g.icon} /> {g.label}:</b> {g.text}</div>)}
         </div>
+      </div>
       </div>
     </>
   )

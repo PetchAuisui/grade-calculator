@@ -1,3 +1,4 @@
+import Icon from '../icons'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../store'
@@ -25,6 +26,7 @@ export default function GpaxPage() {
         </div>
       </div>
 
+      <div className="cols">
       <div className="card">
         <h3>สรุปรายเทอม</h3>
         {rows.length === 0 && <p className="empty">ยังไม่มีข้อมูล</p>}
@@ -55,8 +57,8 @@ export default function GpaxPage() {
         </div>
       </div>
 
-      <div className="card">
-        <h3>🔁 วางแผนอนาคต: อยากได้ GPAX เท่านี้ ต้องทำเทอมหน้าเท่าไร</h3>
+      <div className="card side">
+        <h3><Icon name="repeat" /> วางแผนอนาคต: อยากได้ GPAX เท่านี้ ต้องทำเทอมหน้าเท่าไร</h3>
         <div className="goal-inputs">
           <label>เป้า GPAX
             <input type="number" min="0" step="0.01" placeholder="เช่น 3.00" value={target} onChange={(e) => setTarget(e.target.value)} />
@@ -68,6 +70,7 @@ export default function GpaxPage() {
         <div className="rev">
           {plan ? <div className={plan.level}>{plan.text.replace('ต้องได้แต้มเฉลี่ย', 'GPA เฉลี่ยจากหน่วยกิตที่เหลือต้อง')}</div> : <div className="info">ใส่เป้าหมายและหน่วยกิตที่จะเรียนเพิ่ม</div>}
         </div>
+      </div>
       </div>
     </>
   )

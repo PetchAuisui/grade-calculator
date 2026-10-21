@@ -1,3 +1,4 @@
+import Icon from '../icons'
 import { useRef } from 'react'
 import { useStore } from '../store'
 import { DEFAULT_SCALE, toNum } from '../lib/grade'
@@ -37,13 +38,13 @@ export default function SettingsPage() {
                 <td><input value={s.g} onChange={(e) => patch(i, { g: e.target.value })} /></td>
                 <td><input type="number" step="0.01" value={s.min} onChange={(e) => patch(i, { min: toNum(e.target.value) ?? 0 })} /></td>
                 <td><input type="number" step="0.1" value={s.pt} onChange={(e) => patch(i, { pt: toNum(e.target.value) ?? 0 })} /></td>
-                <td className="w36"><button className="ghost" disabled={scale.length <= 1} onClick={() => setScale(scale.filter((_, j) => j !== i))}>✕</button></td>
+                <td className="w36"><button className="ghost" disabled={scale.length <= 1} onClick={() => setScale(scale.filter((_, j) => j !== i))}><Icon name="x" /></button></td>
               </tr>
             ))}
           </tbody>
         </table>
         <div className="actions">
-          <button onClick={() => setScale([...scale, { g: '?', min: 0, pt: 0 }])}>+ เพิ่มเกรด</button>
+          <button onClick={() => setScale([...scale, { g: '?', min: 0, pt: 0 }])}><Icon name="plus" /> เพิ่มเกรด</button>
           <button onClick={() => setScale(structuredClone(DEFAULT_SCALE))}>คืนค่าเริ่มต้น</button>
         </div>
       </div>
