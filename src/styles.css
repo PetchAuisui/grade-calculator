@@ -22,7 +22,7 @@ nav a.active{background:var(--accent);color:#fff}
 .page-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
-.term-card{display:flex;flex-direction:column;gap:2px;color:var(--text);margin:0}
+.term-card{display:flex;flex-direction:column;gap:2px;color:var(--text);margin:0;cursor:pointer}
 .term-card:hover{border-color:var(--accent)}
 .term-card .big{font-size:2.6rem;font-weight:700;color:var(--accent);line-height:1.2}
 .tag{margin-top:6px;font-size:.75rem;color:var(--warn)}
@@ -121,3 +121,13 @@ h3{display:flex}
 .seg button.on{background:var(--accent);color:#fff}
 .check{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:.9rem;color:var(--muted)}
 .check input{width:auto}
+
+.term-name{font-weight:700;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-top .rename{flex:1;min-width:0;font-weight:700;padding:3px 8px}
+.menu-wrap{position:relative}
+.icon-btn{padding:4px 6px;border-radius:8px}
+.icon-btn:hover{background:var(--accent-soft);color:var(--accent)}
+.menu{position:absolute;right:0;top:calc(100% + 4px);z-index:20;min-width:190px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:4px;box-shadow:0 8px 28px rgba(0,0,0,.2);display:grid}
+.menu button{border:none;justify-content:flex-start;width:100%;background:transparent;padding:8px 10px;font-size:.9rem}
+.menu button:hover{background:var(--accent-soft)}
+.menu button.danger{color:var(--no)}
