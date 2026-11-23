@@ -3,11 +3,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import Icon from '../icons'
 import { useStore } from '../store'
 import StatusBadge from '../components/StatusBadge'
-import { fmt, isDraft, termStats } from '../lib/grade'
+import { fmt, gpaxUpTo, isDraft, termStats } from '../lib/grade'
 
 // การ์ดเทอมหนึ่งใบ: กดเพื่อเข้าเทอม, เมนู ⋯ สำหรับแก้ชื่อ/เปลี่ยนสถานะ/ลบโดยไม่ต้องเข้าไป
 function TermCard({ term }) {
-  const { scale, updateTerm, deleteTerm } = useStore()
+  const { terms, scale, updateTerm, deleteTerm } = useStore()
   const nav = useNavigate()
   const [menu, setMenu] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -62,6 +62,7 @@ function TermCard({ term }) {
       </div>
       <div className="big">{fmt(s.gpa)}</div>
       <span className="muted">GPA เทอม · {term.courses.length} วิชา · {s.allCr} หน่วยกิต</span>
+      <span className="muted">GPAX รวมถึงเทอมนี้ <b>{fmt(gpaxUpTo(terms, term.id, scale))}</b></span>
       {s.pendCr > 0 && <span className="tag">มี {s.pendCr} หน่วยกิตยังไม่ออกเกรด</span>}
     </div>
   )

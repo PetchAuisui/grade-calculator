@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
 import StatusBadge from '../components/StatusBadge'
 import {
-  describeNeed, fmt, gradeOf, isDraft, newCourse, requiredAvg, termStats, toNum, totals,
+  describeNeed, fmt, gpaxUpTo, gradeOf, isDraft, newCourse, requiredAvg, termStats, toNum, totals,
 } from '../lib/grade'
 
 // หน้าเดียวของ 1 เทอม: รายวิชา, GPA เทอมนี้, คำนวณย้อนกลับเฉพาะเทอมนี้
@@ -50,8 +50,9 @@ export default function TermPage() {
           </div>
         </div>
         {isDraft(term) && <p className="hint">เทอมทดลองไม่ถูกนับรวมใน GPAX (เปิดดูรวมได้ที่หน้า GPAX)</p>}
-        <div className="summary two">
+        <div className="summary">
           <div className="stat"><b>{fmt(stats.gpa)}</b><span>GPA เทอมนี้</span></div>
+          <div className="stat"><b>{fmt(gpaxUpTo(terms, id, scale))}</b><span>GPAX รวมถึงเทอมนี้</span></div>
           <div className="stat"><b>{stats.allCr}</b><span>หน่วยกิตเทอมนี้</span></div>
         </div>
 
