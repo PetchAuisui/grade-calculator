@@ -86,3 +86,10 @@ export function describeNeed(need, fullScale) {
 }
 
 export const requiredAvg = (target, haveCr, havePts, newCr) => (target * (haveCr + newCr) - havePts) / newCr
+
+// GPAX สะสมตั้งแต่เทอมแรกจนถึงเทอมนี้ (รวมเทอมนี้) นับเฉพาะเทอมที่เกรดออกแล้ว + เทอมนี้เอง (แม้เป็นทดลอง)
+export function gpaxUpTo(terms, id, scale) {
+  const idx = terms.findIndex((t) => t.id === id)
+  if (idx < 0) return null
+  return totals(terms.slice(0, idx + 1).filter((t) => t.id === id || !isDraft(t)), scale).gpax
+}
